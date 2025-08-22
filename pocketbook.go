@@ -1,8 +1,6 @@
 package pocketbook
 
 import (
-	"fmt"
-
 	"github.com/dlbarduzzi/pocketbook/core"
 )
 
@@ -13,22 +11,25 @@ type PocketBook struct {
 	core.App
 }
 
+// Config is the PocketBook initialization config struct.
 type Config struct {
-	isDev bool
+	DatabaseURL  string
+	MaxOpenConns int
+	MaxIdleConns int
 }
 
 func New() *PocketBook {
-	return NewWithConfig(Config{
-		isDev: true,
-	})
+	return NewWithConfig(Config{})
 }
 
 func NewWithConfig(config Config) *PocketBook {
 	pb := &PocketBook{}
 
-	if config.isDev {
-		fmt.Println("Running in dev mode")
-	}
+	pb.App = core.NewBaseApp(core.BaseAppConfig{
+		DatabaseURL:  config.DatabaseURL,
+		MaxOpenConns: config.MaxOpenConns,
+		MaxIdleConns: config.MaxOpenConns,
+	})
 
 	return pb
 }
@@ -38,6 +39,8 @@ func (pb *PocketBook) Start() error {
 }
 
 func (pb *PocketBook) Execute() error {
-	fmt.Println("Executing...")
+	if err := pb.Bootstrap(); err != nil {
+		return err
+	}
 	return nil
 }
