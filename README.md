@@ -1,1 +1,5 @@
 # PocketBook
+
+## License
+
+[MIT](./LICENSE)
