@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"github.com/dlbarduzzi/pocketbook"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
+	app := pocketbook.New()
+
+	if err := app.Start(); err != nil {
+		panic(err)
+	}
 }
