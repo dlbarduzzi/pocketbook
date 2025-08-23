@@ -13,6 +13,7 @@ type PocketBook struct {
 
 // Config is the PocketBook initialization config struct.
 type Config struct {
+	ServerPort   int
 	DatabaseURL  string
 	MaxOpenConns int
 	MaxIdleConns int
@@ -26,6 +27,7 @@ func NewWithConfig(config Config) *PocketBook {
 	pb := &PocketBook{}
 
 	pb.App = core.NewBaseApp(core.BaseAppConfig{
+		ServerPort:   config.ServerPort,
 		DatabaseURL:  config.DatabaseURL,
 		MaxOpenConns: config.MaxOpenConns,
 		MaxIdleConns: config.MaxOpenConns,
