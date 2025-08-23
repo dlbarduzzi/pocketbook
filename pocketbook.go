@@ -1,6 +1,7 @@
 package pocketbook
 
 import (
+	"github.com/dlbarduzzi/pocketbook/apis"
 	"github.com/dlbarduzzi/pocketbook/core"
 )
 
@@ -37,12 +38,8 @@ func NewWithConfig(config Config) *PocketBook {
 }
 
 func (pb *PocketBook) Start() error {
-	return pb.Execute()
-}
-
-func (pb *PocketBook) Execute() error {
 	if err := pb.Bootstrap(); err != nil {
 		return err
 	}
-	return nil
+	return apis.Serve(pb.App)
 }

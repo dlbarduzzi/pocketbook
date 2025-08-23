@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"log/slog"
 	"net/url"
 
 	"github.com/dlbarduzzi/pocketbook/tools/registry"
@@ -24,6 +25,7 @@ type BaseAppConfig struct {
 var _ App = (*BaseApp)(nil)
 
 type BaseApp struct {
+	logger *slog.Logger
 	config *BaseAppConfig
 }
 
@@ -47,11 +49,31 @@ func NewBaseApp(config BaseAppConfig) *BaseApp {
 	return app
 }
 
+func (app *BaseApp) Logger() *slog.Logger {
+	if app.logger == nil {
+		return slog.Default()
+	}
+	return app.logger
+}
+
 func (app *BaseApp) Bootstrap() error {
 	if err := app.initRegistry(); err != nil {
 		return err
 	}
+
+	if err := app.initLogger(); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (app *BaseApp) ServerPort() int {
+	return app.config.ServerPort
+}
+
+func (app *BaseApp) OnServerShutdown() {
+	fmt.Println("...Implement shutdown tasks...")
 }
 
 func (app *BaseApp) initRegistry() error {
@@ -81,6 +103,11 @@ func (app *BaseApp) initRegistry() error {
 	}
 
 	return app.validateRegistry()
+}
+
+func (app *BaseApp) initLogger() error {
+	app.logger = slog.Default()
+	return nil
 }
 
 func (app *BaseApp) validateRegistry() error {
