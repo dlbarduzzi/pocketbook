@@ -16,9 +16,9 @@ import (
 
 func Serve(app core.App) error {
 	logger := app.Logger()
-	router := NewRouter()
+	router := baseRouter(app)
 
-	handler, err := router.BuildHandler()
+	handler, err := router.buildHandler()
 	if err != nil {
 		return err
 	}

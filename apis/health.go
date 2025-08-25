@@ -1,16 +1,17 @@
 package apis
 
 import (
-	"net/http"
+	"fmt"
 
-	"github.com/dlbarduzzi/pocketbook/tools/router"
+	"github.com/dlbarduzzi/pocketbook/core"
 )
 
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	_, _ = w.Write([]byte("Hello, health!"))
+func healthHandler(e *core.EventRequest) {
+	e.App.Logger().Info("health API called")
+	_, _ = e.Response.Write([]byte("API is healthy!"))
 }
 
-func bindHealthApi(rg *router.RouterGroup) {
-	sub := rg.Group("/health")
-	sub.GET("", healthHandler)
+func bindHealthAPI(r *router) {
+	sub := fmt.Sprintf("%s/v1/health", r.prefix)
+	r.get(sub, healthHandler)
 }

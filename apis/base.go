@@ -1,15 +1,13 @@
 package apis
 
-import (
-	"github.com/dlbarduzzi/pocketbook/tools/router"
-)
+import "github.com/dlbarduzzi/pocketbook/core"
 
-func NewRouter() *router.Router {
-	router := router.NewRouter()
-	apiGroup := router.Group("/api")
+func baseRouter(app core.App) *router {
+	router := newRouter(app)
+	router.prefix = "/api"
 
-	// bindBooksApi(apiGroup)
-	bindHealthApi(apiGroup)
+	bindBooksAPI(router)
+	bindHealthAPI(router)
 
 	return router
 }

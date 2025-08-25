@@ -1,8 +1,9 @@
 package core
 
-// import "github.com/dlbarduzzi/pocketbook/tools/router"
+import "net/http"
 
-// type EventRequest struct {
-// 	App App
-// 	router.Event
-// }
+type EventRequest struct {
+	App      App
+	Request  *http.Request
+	Response http.ResponseWriter
+}
