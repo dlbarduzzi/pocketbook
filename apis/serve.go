@@ -16,8 +16,12 @@ import (
 
 func Serve(app core.App) error {
 	logger := app.Logger()
+	router := NewRouter()
 
-	var handler http.Handler
+	handler, err := router.BuildHandler()
+	if err != nil {
+		return err
+	}
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", app.ServerPort()),
@@ -40,10 +44,8 @@ func Serve(app core.App) error {
 			slog.String("signal", inSignal.String()),
 		)
 
-		func() {
-			logger.Info("server running shutdown tasks...")
-			app.OnServerShutdown()
-		}()
+		logger.Info("server running shutdown tasks...")
+		app.OnServerShutdown()
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 		defer cancel()
@@ -58,7 +60,7 @@ func Serve(app core.App) error {
 
 	logger.Info("server starting", slog.Int("port", app.ServerPort()))
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
